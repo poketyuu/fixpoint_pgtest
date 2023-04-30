@@ -159,10 +159,10 @@ int main(int args, char *argv[])
         auto result = monitor.insert(make_pair(ad, alog));
         if (!result.second)
         {
-            AccessLog prevlog = result.first->second;
+            AccessLog& prevlog = result.first->second;
             if (prevlog.success)
             {
-                result.first->second = alog;
+                prevlog = alog;
             }
             else
             {
@@ -175,9 +175,9 @@ int main(int args, char *argv[])
                         double timeout = difftime(cur, prev) + alog.ping / 1000.0;
                         errlog.push_back(make_pair(ad.GetString(), timeout));
                     }
-                    result.first->second = alog;
+                    prevlog = alog;
                 }else{
-                    result.first->second.AddMissCount();
+                    prevlog.AddMissCount();
                 }
             }
         }
