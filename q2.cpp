@@ -212,7 +212,7 @@ int main(int args, char *argv[])
         }
     }
     // 書き込み処理
-    ofstream ofs("serverlog.csv");
+    ofstream ofs("serverlog_renew.csv");
     ofs << "Server Address , Timeout term" << endl;
     for (int i = 0; i < errlog.size(); i++)
     {

@@ -277,7 +277,7 @@ int main(int args, char *argv[])
         }
     }
     // 書き込み処理
-    ofstream ofs("serverlog.csv");
+    ofstream ofs("serverlog_renew.csv");
     ofs << "Server Address ,Timeout term, Timeout time" << endl;
     ofs << fixed;
     ofs << setprecision(3);

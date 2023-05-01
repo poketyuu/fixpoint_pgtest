@@ -337,7 +337,7 @@ int main(int args, char *argv[])
         }
     }
     // 書き込み処理
-    ofstream ofs("serverlog.csv");
+    ofstream ofs("serverlog_renew.csv");
     ofs << "Server Address ,Timeout term, Timeout time" << endl;
     ofs << fixed;
     ofs << setprecision(3);
@@ -356,7 +356,7 @@ int main(int args, char *argv[])
     }
     overloadofs.close();
     ofstream subnetofs("subnetlog.csv");
-    subnetofs << "Server Address ,overload term, overload time" << endl;
+    subnetofs << "Server Address ,subnet error term, subnet error time" << endl;
     subnetofs << fixed;
     subnetofs << setprecision(3);
     for (int i = 0; i < subnetlog.size(); i++)

@@ -63,7 +63,7 @@ for i in range(1000):
         datelog.append(getdatetimestring(
             date + timedelta(seconds=(timing[j] + duration * i))))
 
-addresslist = getrandomipaddress(10,10)
+addresslist = getrandomipaddress(50,2)
 addresslog = []
 
 for i in range(1000):
@@ -81,4 +81,4 @@ str_ping_list = pd.Series(
 dfm_log = pd.concat(
     [pd_date_log,pd_address_log,str_ping_list],axis=1
 )
-dfm_log.to_csv('testdata.csv',index=False,header=False)
+dfm_log.to_csv('testdata2.csv',index=False,header=False)
