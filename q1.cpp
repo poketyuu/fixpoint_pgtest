@@ -9,8 +9,8 @@ tm GetTMFromString(string s)
     {
         try
         {
-            int year = stoi(results[1].str());
-            int month = stoi(results[2].str());
+            int year = stoi(results[1].str()) - 1900;
+            int month = stoi(results[2].str()) - 1;
             int day = stoi(results[3].str());
             int hour = stoi(results[4].str());
             int minute = stoi(results[5].str());
@@ -21,8 +21,23 @@ tm GetTMFromString(string s)
         {
         }
     }
-    return tm{0, 0, 0, 0, 0, 0};
+    return tm{0, 0, 0, 1, 0, 0};
 }
+class Errlog
+{
+public:
+    string ServerAddress;
+    string start;
+    string end;
+    double TimeoutTerm;
+    Errlog(string _serveraddress, string _start, string _end, double _timeoutterm)
+    {
+        ServerAddress = _serveraddress;
+        start = _start;
+        end = _end;
+        TimeoutTerm = _timeoutterm;
+    }
+};
 class Address{
 public:
     int prefix;
@@ -98,12 +113,26 @@ public:
             }
         }
     }
+    string OutputAccesstime(bool isend)
+    {
+        ostringstream syear, smonth, sday, shour, sminute, ssecond;
+        tm outputtime = accesstime;
+        if (isend)
+            outputtime.tm_sec += ping / 1000;
+        syear << setfill('0') << setw(4) << (outputtime.tm_year + 1900);
+        smonth << setfill('0') << setw(2) << (outputtime.tm_mon + 1);
+        sday << setfill('0') << setw(2) << (outputtime.tm_mday);
+        shour << setfill('0') << setw(2) << (outputtime.tm_hour);
+        sminute << setfill('0') << setw(2) << (outputtime.tm_min);
+        ssecond << setfill('0') << setw(2) << (outputtime.tm_sec);
+        return syear.str() + smonth.str() + sday.str() + shour.str() + sminute.str() + ssecond.str();
+    }
 };
 int main(int args,char *argv[]){
     string logfile;
     //cin >> logfile;
     logfile = argv[1];
-    vector<pair<string, double>> errlog;
+    vector<Errlog> errlog;
     ifstream ifs(logfile);
     // ファイルが存在しているかを判定する
     if(!ifs){
@@ -133,7 +162,7 @@ int main(int args,char *argv[]){
                     time_t prev = mktime(&prevlog.accesstime);
                     time_t cur = mktime(&alog.accesstime);
                     double timeout = difftime(cur, prev) + alog.ping / 1000.0;
-                    errlog.push_back(make_pair(ad.GetString(), timeout));
+                    errlog.push_back(Errlog(ad.GetString(), prevlog.OutputAccesstime(false), alog.OutputAccesstime(true), timeout));
                     result.first->second = alog;
                 }
             }
@@ -144,7 +173,7 @@ int main(int args,char *argv[]){
     ofs << "Server Address , Timeout term" << endl;
     for (int i = 0; i < errlog.size(); i++)
     {
-        ofs << errlog[i].first << "," << errlog[i].second << endl;
+        ofs << errlog[i].ServerAddress << "," << (errlog[i].start + "-" + errlog[i].end) << "," << errlog[i].TimeoutTerm << endl;
     }
     ofs.close();
     return 0;
